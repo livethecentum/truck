@@ -19,10 +19,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap&text=%EC%98%A4%EB%8A%98%EC%9D%98%20%ED%91%B8%EB%93%9C%ED%8A%B8%EB%9F%ADABCDE">
 <script>
-  /* 웹 앱 주소 — Apps Script 배포 주소가 바뀌면 이 한 줄만 고치면 됩니다 */
+  /* 웹 앱 주소 (참고용 — 실제로 여는 곳은 app.html. 배포 주소가 바뀌면 app.html 의 APP_URL 도 함께 고치기) */
   var APP_URL = 'https://script.google.com/macros/s/AKfycbwjJjUpcnmtXTRk7pbqFLmmg4b7M1Zb_QZKC-M5d_gabPM1p0hL7juK2tblVztOzl__wg/exec';
   /* 주소 뒤에 ?go 를 붙이면 안내 없이 바로 이동 (예: 홈 화면 바로가기용) */
-  if (/[?&]go\b/.test(location.search)) location.replace(APP_URL);
+  if (/[?&]go\b/.test(location.search)) location.replace('app.html');
 </script>
 <style>
   /* 앱(Apps Script) Styles.html 과 같은 토큰·모양 — 안내 페이지에서 앱으로 넘어가도 같은 화면처럼 보이게 */
@@ -155,7 +155,8 @@
   </div>
 
 <script>
-  document.getElementById('open').href = APP_URL;
+  // 앱은 app.html 안에 끼워 넣어 엶 (구글 안내 문구 없이). 거기서도 안 뜨면 app.html 이 바로 열기 버튼을 보여줌
+  document.getElementById('open').href = 'app.html';
   (function () {
     var btn = document.getElementById('copy'), text = 'livethecentum.github.io/truck';
     function done() { btn.textContent = '복사했어요'; btn.setAttribute('data-done', ''); setTimeout(function () { btn.textContent = '주소 복사'; btn.removeAttribute('data-done'); }, 2000); }
