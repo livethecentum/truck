@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>라이브더센텀 푸드트럭 맵</title>
+<meta name="description" content="후문 경비실과 상가동 사이에 오는 푸드트럭 — 오늘 온 트럭, 영업 상태, 이번 주 일정을 확인하세요.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="라이브더센텀 푸드트럭 맵">
+<meta property="og:description" content="오늘 온 트럭 · 영업 상태 · 이번 주 일정">
+<meta property="og:url" content="https://livethecentum.github.io/truck/">
+<meta property="og:image" content="https://livethecentum.github.io/truck/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#2C3341">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap&text=%EC%98%A4%EB%8A%98%EC%9D%98%20%ED%91%B8%EB%93%9C%ED%8A%B8%EB%9F%ADABCDE">
+<script>
+  /* 웹 앱 주소 — Apps Script 배포 주소가 바뀌면 이 한 줄만 고치면 됩니다 */
+  var APP_URL = 'https://script.google.com/macros/s/AKfycbwjJjUpcnmtXTRk7pbqFLmmg4b7M1Zb_QZKC-M5d_gabPM1p0hL7juK2tblVztOzl__wg/exec';
+  /* 주소 뒤에 ?go 를 붙이면 안내 없이 바로 이동 (예: 홈 화면 바로가기용) */
+  if (/[?&]go\b/.test(location.search)) location.replace(APP_URL);
+</script>
+<style>
+  :root {
+    --bg: #F3F4F0; --surface: #FFFFFF; --ink: #18202E; --muted: #535C6B; --line: #DCDFE4;
+    --sign: #FFC527; --sign-ink: #18202E; --asphalt: #2C3341; --asphalt-ink: #F3F4F0; --asphalt-muted: #A9B1BF;
+    --focus: #2453A3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F1522; --surface: #182134; --ink: #ECEFF5; --muted: #A7B0C0; --line: #2A3550;
+      --sign: #FFCB3D; --sign-ink: #141A26; --asphalt: #0A0F1A; --asphalt-ink: #ECEFF5; --asphalt-muted: #8C95A7;
+      --focus: #96BAFF;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    min-height: 100vh; min-height: 100dvh; background: var(--bg); color: var(--ink);
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    word-break: keep-all; line-height: 1.5; -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column;
+  }
+  a, button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+  .hero { background: var(--asphalt); color: var(--asphalt-ink); padding: calc(2.25rem + env(safe-area-inset-top)) 1.25rem 0; }
+  .wrap { max-width: 30rem; margin: 0 auto; }
+  .place { display: flex; align-items: center; gap: .625rem; }
+  .logos { display: inline-flex; align-items: center; gap: .375rem; }
+  .logos img { display: block; height: 1.625rem; width: auto; }
+  .tag { font-size: .8125rem; font-weight: 800; padding: .25rem .5rem; border-radius: 6px; background: var(--sign); color: var(--sign-ink); box-shadow: inset 0 -2px 0 rgba(0,0,0,.14); }
+  h1 { font-family: 'Black Han Sans', Pretendard, sans-serif; font-weight: 400; font-size: clamp(2.5rem, 12vw, 3.5rem); line-height: 1.05; margin: .375rem 0 .75rem; }
+  .where { font-size: 1.0625rem; color: var(--asphalt-muted); }
+  .where b { color: var(--asphalt-ink); font-weight: 700; }
+  .bays { display: flex; margin: 1.75rem -1.25rem 0; height: 3.25rem; border-top: 3px dashed var(--sign); }
+  .bays span { flex: 1; display: grid; place-items: center; border-right: 3px dashed var(--sign);
+    font-family: 'Black Han Sans', sans-serif; font-size: 1.375rem; color: var(--sign); }
+  .bays span:last-child { border-right: 0; }
+
+  main { flex: 1; width: 100%; min-width: 0; padding: 1.75rem 1.25rem 2rem; }
+  .open {
+    display: flex; align-items: center; justify-content: center; gap: .625rem;
+    width: 100%; min-height: 3.75rem; border-radius: 14px; text-decoration: none;
+    background: var(--sign); color: var(--sign-ink); font-size: 1.25rem; font-weight: 800;
+    box-shadow: 0 4px 0 #D9A30C;
+  }
+  .open:active { transform: translateY(2px); box-shadow: 0 2px 0 #D9A30C; }
+  .open svg { width: 1.375rem; height: 1.375rem; flex: none; }
+  .what { list-style: none; display: grid; gap: .5rem; margin: 1.5rem 0 0; }
+  .what li { display: flex; gap: .625rem; align-items: baseline; font-size: 1rem; }
+  .what li::before { content: ''; width: .5rem; height: .5rem; border-radius: 2px; background: var(--sign); flex: none; transform: translateY(-.125rem); }
+
+  .help { margin-top: 2rem; background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 1.125rem 1.125rem 1.25rem; }
+  .help h2 { font-size: 1.0625rem; font-weight: 800; margin-bottom: .375rem; }
+  .help p { font-size: .9375rem; color: var(--muted); }
+  .help p b { color: var(--ink); }
+  .addr { display: grid; gap: .625rem; margin-top: .875rem; padding: .875rem;
+    border-radius: 12px; background: var(--bg); border: 1.5px dashed var(--line); }
+  .addr code { font-family: inherit; font-weight: 800; font-size: clamp(1rem, 4.6vw, 1.1875rem); letter-spacing: -.01em; white-space: nowrap; text-align: center; }
+  .copy { width: 100%; min-height: 2.75rem; padding: 0 .875rem; border-radius: 10px; border: 1.5px solid var(--ink);
+    background: var(--surface); font-weight: 800; font-size: .9375rem; cursor: pointer; }
+  .copy[data-done] { background: var(--ink); color: var(--bg); }
+
+  footer { padding: 1.25rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+  .sign-off { display: flex; align-items: center; gap: .875rem; max-width: 30rem; margin: 0 auto; }
+  .sign-off img { width: 4.5rem; height: auto; flex: none; }
+  footer p { font-size: .875rem; color: var(--muted); }
+  footer b { color: var(--ink); }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="place"><span class="logos" role="img" aria-label="LIVE THE CENTUM 라이브더센텀"><img src="logo-mark.png" alt="" width="22" height="27"><img src="logo-word.png" alt="" width="86" height="26"></span><b class="tag">푸드트럭 맵</b></p>
+      <h1>오늘의 푸드트럭</h1>
+      <p class="where">자리는 <b>후문 경비실과 상가동 사이</b></p>
+    </div>
+    <div class="bays" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span></div>
+  </header>
+
+  <main class="wrap">
+    <a class="open" id="open" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+      푸드트럭 맵 열기
+    </a>
+    <ul class="what">
+      <li>오늘 온 트럭과 영업 상태 (영업중 · 품절 임박 · 퇴근)</li>
+      <li>이번 주 방문 일정과 자리(A~E) 안내</li>
+      <li>메뉴와 가격, 가게 문의</li>
+    </ul>
+
+    <section class="help" aria-labelledby="helpTitle">
+      <h2 id="helpTitle">구글 안내 화면이 뜨고 안 열리나요?</h2>
+      <p>회사·학교 구글 계정이 로그인된 휴대폰에서 생길 수 있어요.
+        <b>시크릿 창</b>(사파리는 <b>개인정보 보호 모드</b>)을 열고 아래 주소를 입력해주세요.</p>
+      <div class="addr">
+        <code>livethecentum.github.io/truck</code>
+        <button class="copy" id="copy" type="button">주소 복사</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="sign-off"><img src="logo.png" alt="LIVE THE CENTUM 라이브더센텀 로고" width="72" height="80">
+    <p><b>라이브더센텀 입주자대표회의</b>가 운영해요. 자리·일정 문의는 <b>관리사무소</b>로 해주세요.</p></div>
+  </footer>
+
+<script>
+  document.getElementById('open').href = APP_URL;
+  (function () {
+    var btn = document.getElementById('copy'), text = 'livethecentum.github.io/truck';
+    function done() { btn.textContent = '복사했어요'; btn.setAttribute('data-done', ''); setTimeout(function () { btn.textContent = '주소 복사'; btn.removeAttribute('data-done'); }, 2000); }
+    function fallback() {
+      var t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', '');
+      t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
+      try { if (document.execCommand('copy')) done(); } catch (e) {}
+      document.body.removeChild(t);
+    }
+    btn.addEventListener('click', function () {
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    });
+  })();
+</script>
+</body>
+</html>
