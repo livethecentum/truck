@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>오늘의 푸드트럭 · 라이브더센텀</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ECEDE8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1522" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script>
+  /* 시험용: 앱(Apps Script)을 이 페이지 안에 끼워 넣어 구글 안내 문구를 가리는지 확인
+     index.html 의 APP_URL 과 같은 주소여야 합니다 */
+  var APP_URL = 'https://script.google.com/macros/s/AKfycbwjJjUpcnmtXTRk7pbqFLmmg4b7M1Zb_QZKC-M5d_gabPM1p0hL7juK2tblVztOzl__wg/exec';
+</script>
+<style>
+  :root { --bg: #ECEDE8; --ink: #18202E; --muted: #535C6B; --line-strong: #C3C8D0; --surface: #FFFFFF; --brand: #8F6A2C; --focus: #2453A3; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0F1522; --ink: #ECEFF5; --muted: #A7B0C0; --line-strong: #3B4866; --surface: #182134; --brand: #D2AE6E; --focus: #96BAFF; }
+  }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--ink); overflow: hidden; }
+  body { font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; word-break: keep-all; }
+  iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: var(--bg); }
+
+  /* 앱이 뜨기 전까지 보이는 화면 (앱 배경과 같은 색이라 넘어갈 때 튀지 않음) */
+  .wait { position: fixed; inset: 0; display: grid; place-items: center; align-content: center; gap: 1rem; padding: 1.5rem; text-align: center; z-index: 1; background: var(--bg); transition: opacity .25s; }
+  .wait[hidden] { display: none; }
+  .wait.out { opacity: 0; pointer-events: none; }
+  .logo { width: 4.5rem; height: 5rem; background: var(--brand); -webkit-mask: url(logo.png) center / contain no-repeat; mask: url(logo.png) center / contain no-repeat; }
+  .wait p { margin: 0; font-size: .9375rem; color: var(--muted); }
+  .slow { display: none; gap: .75rem; justify-items: center; }
+  .wait.is-slow .slow { display: grid; }
+  .slow a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.25rem; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-weight: 800; text-decoration: none; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .wait { transition: none; } }
+</style>
+</head>
+<body>
+  <div class="wait" id="wait" role="status">
+    <span class="logo" aria-hidden="true"></span>
+    <p>오늘의 푸드트럭을 불러오고 있어요.</p>
+    <div class="slow">
+      <p>화면이 계속 안 뜨면 아래 버튼으로 바로 열어주세요.</p>
+      <a id="direct" href="#" target="_top">푸드트럭 맵 바로 열기</a>
+    </div>
+  </div>
+  <iframe id="app" title="오늘의 푸드트럭" allow="clipboard-write"></iframe>
+<script>
+  (function () {
+    var wait = document.getElementById('wait'), frame = document.getElementById('app');
+    document.getElementById('direct').href = APP_URL;
+    var slow = setTimeout(function () { wait.classList.add('is-slow'); }, 8000);
+    // 앱이 실제로 그려졌을 때만 가림막을 걷음 (iframe load 는 구글 오류 화면이어도 일어나서 믿을 수 없음)
+    window.addEventListener('message', function (e) {
+      if (e.data !== 'ftm:ready' || !/\.googleusercontent\.com$|^https:\/\/script\.google\.com$/.test(e.origin)) return;
+      clearTimeout(slow);
+      wait.classList.add('out');
+      setTimeout(function () { wait.hidden = true; }, 300);
+    });
+    frame.src = APP_URL;
+  })();
+</script>
+</body>
+</html>
