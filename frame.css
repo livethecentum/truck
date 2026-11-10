@@ -1,0 +1,74 @@
+/* frame.css — app.html·owner.html·admin.html 공통 (앱 화면을 끼워 넣는 틀 + 스플래시)
+ 색은 앱(Styles.html)과 같은 토큰. 고치면 세 페이지에 함께 적용돼요. */
+:root {
+  --bg: #ECEDE8; --surface: #FFFFFF; --ink: #18202E; --muted: #535C6B; --line-strong: #C3C8D0;
+  --sign: #FFC527; --sign-ink: #18202E; --brand: #8F6A2C; --deco: #C9CCC2; --focus: #2453A3;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0F1522; --surface: #182134; --ink: #ECEFF5; --muted: #A7B0C0; --line-strong: #3B4866;
+    --sign: #FFCB3D; --sign-ink: #141A26; --brand: #D2AE6E; --deco: #253049; --focus: #96BAFF;
+  }
+}
+html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--ink); overflow: hidden; }
+body { font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; word-break: keep-all; -webkit-font-smoothing: antialiased; }
+p, h1 { margin: 0; }
+iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: var(--bg); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* 배경 장식: 떠다니는 음식 (앱과 같은 아이콘·위치) */
+.food-sky { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; color: var(--deco); }
+.food-sky i { position: absolute; display: block; transform: rotate(var(--r)); animation: food-drift 30s ease-in-out infinite alternate; will-change: transform; }
+.food-sky svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes food-drift {
+  0%   { transform: translate(0, 0) rotate(var(--r)); }
+  50%  { transform: translate(.75rem, -1.75rem) rotate(calc(var(--r) + 8deg)); }
+  100% { transform: translate(-.5rem, -.75rem) rotate(calc(var(--r) - 4deg)); }
+}
+@media (prefers-reduced-motion: reduce) { .food-sky i { animation: none; } }
+@media (max-width: 47.99rem) { .food-sky { opacity: .75; } .food-sky i:nth-child(n+11) { display: none; } }
+
+/* ---------- 스플래시: 트럭이 자리 줄을 지나가며 표지에 불을 켬 (한 장면) ---------- */
+.wait { position: fixed; inset: 0; z-index: 2; background: var(--bg); transition: opacity .3s; }
+.wait[hidden] { display: none; }
+.wait.out { opacity: 0; pointer-events: none; }
+.stage { position: relative; z-index: 1; height: 100%; display: grid; place-items: center; align-content: center; gap: 1.75rem; padding: 1.5rem; text-align: center; }
+.logo { display: block; width: 3.75rem; height: 4.25rem; margin: 0 auto .875rem; background: var(--brand); -webkit-mask: url(logo.png) center / contain no-repeat; mask: url(logo.png) center / contain no-repeat; }
+h1 { font-family: 'Black Han Sans', Pretendard, sans-serif; font-weight: 400; font-size: 2.25rem; line-height: 1.1; }
+.today { margin-top: .375rem; font-weight: 700; color: var(--muted); }
+
+.lot { width: min(20rem, 100%); }
+.bays { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; }
+.sign { height: 3.25rem; border-radius: 8px; display: grid; place-items: center; align-content: center; background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.sign b { font-family: 'Black Han Sans', Pretendard, sans-serif; font-weight: 400; font-size: 1.5rem; line-height: 1; }
+.sign small { font-size: .6875rem; font-weight: 800; line-height: 1.1; opacity: .8; }
+.road { position: relative; height: 2.75rem; margin-top: .5rem; border-bottom: 2px dashed var(--line-strong); overflow: hidden; }
+.truck { position: absolute; bottom: .125rem; left: 0; width: 2.5rem; height: 2.5rem; color: var(--ink); animation: drive 3.2s linear infinite; }
+.truck svg { display: block; width: 100%; height: 100%; }
+/* 트럭 앞(오른쪽)이 각 자리 가운데를 지날 때 그 표지가 켜지도록 lit0~4 와 같은 시간표 */
+@keyframes drive {
+  0%   { transform: translateX(-2.5rem); }
+  75%  { transform: translateX(calc(min(20rem, 100vw - 3rem) - 1.25rem)); }
+  100% { transform: translateX(calc(min(20rem, 100vw - 3rem) + 1rem)); }
+}
+@keyframes lit0 { 0%, 7.49% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } 7.5%, 88% { background: var(--sign); color: var(--sign-ink); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14); } 100% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } }
+.bays .sign:nth-child(1) { animation: lit0 3.2s linear infinite; }
+@keyframes lit1 { 0%, 22.49% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } 22.5%, 88% { background: var(--sign); color: var(--sign-ink); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14); } 100% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } }
+.bays .sign:nth-child(2) { animation: lit1 3.2s linear infinite; }
+@keyframes lit2 { 0%, 37.49% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } 37.5%, 88% { background: var(--sign); color: var(--sign-ink); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14); } 100% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } }
+.bays .sign:nth-child(3) { animation: lit2 3.2s linear infinite; }
+@keyframes lit3 { 0%, 52.49% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } 52.5%, 88% { background: var(--sign); color: var(--sign-ink); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14); } 100% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } }
+.bays .sign:nth-child(4) { animation: lit3 3.2s linear infinite; }
+@keyframes lit4 { 0%, 67.49% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } 67.5%, 88% { background: var(--sign); color: var(--sign-ink); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14); } 100% { background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); } }
+.bays .sign:nth-child(5) { animation: lit4 3.2s linear infinite; }
+.status { font-size: .9375rem; color: var(--muted); }
+.slow { display: none; gap: .75rem; justify-items: center; }
+.wait.is-slow .slow { display: grid; }
+.slow a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.25rem; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-weight: 800; text-decoration: none; }
+
+/* 동작 줄이기: 트럭은 멈춰 있고 표지는 모두 켜진 채 */
+@media (prefers-reduced-motion: reduce) {
+  .wait { transition: none; }
+  .truck { animation: none; transform: translateX(calc(min(20rem, 100vw - 3rem) / 2 - 1.25rem)); }
+  .bays .sign { animation: none !important; background: var(--sign); color: var(--sign-ink); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14); }
+}
