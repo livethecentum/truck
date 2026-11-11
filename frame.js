@@ -60,7 +60,10 @@ function ftmFoodSky(parent) {
   var wait = document.getElementById('wait'), frame = document.getElementById('app');
   ftmFoodSky(wait);
 
-  var src = APP_URL, direct = APP_URL;
+  // 홈 화면 아이콘(앱 모드)으로 열었는지 — 관리 [이용 현황] 에서 셈 (기기에 따라 일반 열람으로 보일 수 있음)
+  var home = false;
+  try { home = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches; } catch (e) { home = false; }
+  var src = APP_URL + '?via=landing' + (home ? '&src=home' : ''), direct = APP_URL;
   if (mode === 'owner' || mode === 'admin') {
     var name = mode === 'owner' ? 't' : 'k';
     var m = new RegExp('^#' + name + '=([A-Za-z0-9_-]{40,100})$').exec(location.hash || '');
@@ -71,7 +74,7 @@ function ftmFoodSky(parent) {
       document.querySelector('.lot').hidden = true;
       return;
     }
-    src = APP_URL + '?p=' + mode + '&via=landing&' + name + '=' + m[1];
+    src = APP_URL + '?p=' + mode + '&via=landing' + (home ? '&src=home' : '') + '&' + name + '=' + m[1];
     direct = APP_URL + '?p=' + mode + '&' + name + '=' + m[1];
   }
   document.getElementById('direct').href = direct;
