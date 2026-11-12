@@ -18,15 +18,15 @@ iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; displa
 
 /* 배경 장식: 떠다니는 음식 (앱과 같은 아이콘·위치) */
 .food-sky { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; color: var(--deco); }
-.food-sky i { position: absolute; display: block; transform: rotate(var(--r)); animation: food-drift 30s ease-in-out infinite alternate; will-change: transform; }
+.food-sky i { position: absolute; display: block; transform: rotate(var(--r)); animation: food-drift 15s ease-in-out infinite alternate; will-change: transform; }
 .food-sky svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 @keyframes food-drift {
   0%   { transform: translate(0, 0) rotate(var(--r)); }
-  50%  { transform: translate(.75rem, -1.75rem) rotate(calc(var(--r) + 8deg)); }
-  100% { transform: translate(-.5rem, -.75rem) rotate(calc(var(--r) - 4deg)); }
+  50%  { transform: translate(1.5rem, -3rem) rotate(calc(var(--r) + 14deg)); }
+  100% { transform: translate(-1rem, -1.25rem) rotate(calc(var(--r) - 8deg)); }
 }
 @media (prefers-reduced-motion: reduce) { .food-sky i { animation: none; } }
-@media (max-width: 47.99rem) { .food-sky { opacity: .75; } .food-sky i:nth-child(n+11) { display: none; } }
+@media (max-width: 47.99rem) { .food-sky { opacity: .75; } .food-sky i:nth-child(n+15) { display: none; } }
 
 /* ---------- 스플래시: 트럭이 자리 줄을 지나가며 표지에 불을 켬 (한 장면) ---------- */
 .wait { position: fixed; inset: 0; z-index: 2; background: var(--bg); transition: opacity .3s; }

@@ -53,15 +53,15 @@
 
   /* 배경 장식: 떠다니는 음식 (앱과 같은 아이콘·위치) */
   .food-sky { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; color: var(--deco); }
-  .food-sky i { position: absolute; display: block; transform: rotate(var(--r)); animation: food-drift 30s ease-in-out infinite alternate; will-change: transform; }
+  .food-sky i { position: absolute; display: block; transform: rotate(var(--r)); animation: food-drift 15s ease-in-out infinite alternate; will-change: transform; }
   .food-sky svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   @keyframes food-drift {
     0%   { transform: translate(0, 0) rotate(var(--r)); }
-    50%  { transform: translate(.75rem, -1.75rem) rotate(calc(var(--r) + 8deg)); }
-    100% { transform: translate(-.5rem, -.75rem) rotate(calc(var(--r) - 4deg)); }
+    50%  { transform: translate(1.5rem, -3rem) rotate(calc(var(--r) + 14deg)); }
+    100% { transform: translate(-1rem, -1.25rem) rotate(calc(var(--r) - 8deg)); }
   }
   @media (prefers-reduced-motion: reduce) { .food-sky i { animation: none; } }
-  @media (max-width: 47.99rem) { .food-sky { opacity: .75; } .food-sky i:nth-child(n+11) { display: none; } }
+  @media (max-width: 47.99rem) { .food-sky { opacity: .75; } .food-sky i:nth-child(n+15) { display: none; } }
 
   .app { position: relative; z-index: 1; max-width: 36rem; margin: 0 auto; padding: calc(1.25rem + env(safe-area-inset-top)) 1rem calc(2rem + env(safe-area-inset-bottom)); }
 
@@ -173,7 +173,7 @@
     });
   })();
 </script>
-<script src="frame.js?v=2"></script>
+<script src="frame.js?v=3"></script>
 <script>ftmFoodSky(document.body);  /* 앱과 같은 떠다니는 음식 (frame.js) */</script>
 </body>
 </html>
