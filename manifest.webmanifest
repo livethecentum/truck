@@ -1,13 +1,28 @@
 {
+  "id": "app.html",
   "name": "라이브더센텀 푸드트럭 맵",
   "short_name": "푸드트럭 맵",
   "start_url": "app.html",
-  "display": "browser",
+  "scope": "app.html",
+  "display": "standalone",
   "background_color": "#18202E",
   "theme_color": "#18202E",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
