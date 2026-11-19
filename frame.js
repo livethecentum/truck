@@ -7,7 +7,7 @@
  *    - app   : 주민 화면
  *    - owner : 주소 #t=토큰 → 사장님 화면 (토큰은 # 뒤라 GitHub 서버로 가지 않음)
  *    - admin : 주소 #k=열쇠 → 관리 화면 (PIN 은 화면 안에서 입력)
- *    앱이 그려지면 보내는 'ftm:ready' 신호를 받을 때만 스플래시를 걷음. 8초가 지나면 [바로 열기] 버튼.
+ *    앱이 그려지면 보내는 'ftm:ready' 신호를 받을 때만 스플래시를 걷음. 8초(사장님·관리 15초)가 지나면 [바로 열기] 버튼.
  * 4) (v2.6~) 주민 화면(app)만 설치형 앱: manifest(display standalone, scope app.html) + sw.js(저장 안 함).
  *    안드로이드 크롬 등이 주는 설치 기회를 잡아 두었다가, 앱 안 [홈 화면] 버튼이 'ftm:install' 을 보내면 설치 창을 띄움.
  *    사장님·관리자는 설치형으로 만들지 말 것 — 설치 앱은 manifest 시작 주소로 열려 # 뒤 열쇠가 빠짐.
@@ -106,7 +106,8 @@ function ftmFoodSky(parent) {
   // 오늘 날짜는 휴대폰 시계로 바로 표시 (데이터를 기다리지 않음)
   var d = new Date(), W = ['일', '월', '화', '수', '목', '금', '토'];
   document.getElementById('today').textContent = (d.getMonth() + 1) + '월 ' + d.getDate() + '일 ' + W[d.getDay()] + '요일';
-  var slow = setTimeout(function () { wait.classList.add('is-slow'); }, 8000);
+  // (v3.4~) 사장님·관리 화면은 시트를 읽느라 몇 초 걸려서 [바로 열기]를 15초 뒤에 (주민 화면은 8초)
+  var slow = setTimeout(function () { wait.classList.add('is-slow'); }, mode === 'app' ? 8000 : 15000);
   // 앱이 실제로 그려졌을 때만 스플래시를 걷음 (iframe load 는 구글 오류 화면이어도 일어나서 믿을 수 없음)
   window.addEventListener('message', function (e) {
     if (!/\.googleusercontent\.com$|^https:\/\/script\.google\.com$/.test(e.origin)) return;
